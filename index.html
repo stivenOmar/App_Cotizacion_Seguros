@@ -24,9 +24,9 @@
             <form action="" id='formulario'>
                 <div class="input-field col s12">
                     <i class="material-icons prefix">airline_seat_recline_normal</i>
-                    <select>
+                    <select id="select" seleccion='0'>
                         <option value="" disabled selected>Seleccione la marca</option>
-                        <option value="1">Americano</option>
+                        <option value="1" >Americano</option>
                         <option value="2">Europeo</option>
                         <option value="3">Chino</option>
                     </select>
@@ -37,7 +37,7 @@
                     <i class="material-icons prefix">access_time</i>
                     <label for="">Anio</label>
                     <p class="range-field">
-                        <input type="range" id="test5" min="1980" max="2020" />
+                        <input type="range" id='rangoAnio' min="1980" max="2020" />
                     </p>
                 </div>
 
@@ -72,9 +72,15 @@
     <script type="text/javascript" src="js/materialize.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('select').material_select();
+            $('select').material_select();            
+            $('select').on('change', function(event){
+                let valor = event.target.value;
+                let seleccion = event.target.attributes[1];
+                seleccion.value = valor;
+            })
         });
     </script>
+    <script type="text/javascript" src="js/app.js" ></script>
 
 </body>
 
