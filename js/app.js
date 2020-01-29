@@ -16,25 +16,27 @@ optionSelected = document.getElementById('select');
 tipoSeguro = document.getElementById('tipoSeguro');
 
 
-formularioEnvio.addEventListener('submit',enviarDatos);
+formularioEnvio.addEventListener('submit', enviarDatos);
 
 
-function cargarValores(event){
+function cargarValores(event) {
     rangoAnioAutos.max = anioMaximo;
     rangoAnioAutos.min = anioMinimo;
 }
 
-function enviarDatos(event){
+function enviarDatos(event) {
     event.preventDefault();
     let marcaAuto = optionSelected.getAttribute('seleccion');
     let anioAuto = rangoAnioAutos.value;
     let seguroAuto = tipoSeguro.querySelector('input[name="group1"]:checked').value;
     const nuevatarjeta = new tarjetaCotizacion();
-    if(marcaAuto == 0){
+    if (marcaAuto == 0) {
         nuevatarjeta.mostrarError('Debes seleccionar una marca de auto');
-    }else {
-        const nuevoAuto = new Auto(marcaAuto,anioAuto,seguroAuto);
-        console.log(nuevoAuto.cotizarSeguro());
+    } else {
+        const nuevoAuto = new Auto(marcaAuto, anioAuto, seguroAuto);
+        const nuevaTarjeta = new tarjetaCotizacion();
+
+        nuevaTarjeta.mostrarResultados(nuevoAuto, nuevoAuto.cotizarSeguro())
     }
 
 }
@@ -42,23 +44,57 @@ function enviarDatos(event){
 //clases
 class tarjetaCotizacion {
 
-    mostrarResultados(){
-
+    mostrarResultados(objeto, valorTotal) {
+        let card;
+        let marca;
+        card = document.getElementById('sectionCard');
+        card.style.display = 'none';
+        card.style.margin
+        document.getElementById('preloader').style.display = 'block';
+        switch (objeto.marca) {
+            case '1':
+                marca = 'Americano'
+                break;
+            case '2':
+                marca = 'Asiatico'
+                break;
+            case '3':
+                marca = 'Europeo'
+                break;
+        }
+        setTimeout(function () {
+            document.getElementById('preloader').style.display = 'none';
+            card.style.display = 'block';
+            card.style.marginBottom = '100px';
+            card.innerHTML = `
+            <div class="card grey darken-4" id='info'>
+                <div class="card-content white-text">
+                    <span class="card-title center">Detalle Seguro</span>
+                    <p>Marca : ${marca}</p>
+                    <p>Anio : ${objeto.anio}</p>
+                    <p>Tipo Seguro  : ${objeto.tipoSeguro} </p>
+                </div>
+                <div class="card-action grey lighten-5">
+                    <p>TOTAL : ${valorTotal} $</p>
+                </div>
+            </div>
+            `
+        }, 3500)
     }
 
-    mostrarError(mensaje){
+    mostrarError(mensaje) {
         alert(mensaje)
     }
 }
 
 class Auto {
-    constructor(marca,anio,tipoSeguro){
+    constructor(marca, anio, tipoSeguro) {
         this.marca = marca;
         this.anio = anio;
         this.tipoSeguro = tipoSeguro;
     }
 
-    cotizarSeguro(){
+    cotizarSeguro() {
         /*
         1 = americano 1.15
         2 = asiatico  1.05
@@ -88,15 +124,15 @@ class Auto {
         diferenciaDeAnios = new Date().getFullYear() - this.anio;
 
         //por cada anio se reduce 3% al valor por marca
-        valorTotal = valorPorMarca -  (valorPorMarca * (diferenciaDeAnios * 3))/100;
+        valorTotal = valorPorMarca - (valorPorMarca * (diferenciaDeAnios * 3)) / 100;
 
-        if(this.tipoSeguro === 'Basico'){
+        if (this.tipoSeguro === 'Basico') {
             valorTotal = valorTotal + (valorTotal * 0.30);
-        }else {
+        } else {
             valorTotal = valorTotal + (valorTotal * 0.50);
         }
-        
-        console.log(valorTotal);
+
+        return valorTotal;
 
     }
 
